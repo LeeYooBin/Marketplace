@@ -1,0 +1,40 @@
+.header {
+  background: var(--dark-linear-gradient);
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.icon {
+  font-size: 2rem;
+  color: var(--dark-white-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (min-width: 760px) {
+  .header {
+    padding: 2rem 7rem;
+  }
+}
+
+@media screen and (min-width: 1030px) {
+  .header {
+    padding: 2rem 10rem;
+  }
+
+  .buttons {
+    gap: 3rem;
+  }
+}

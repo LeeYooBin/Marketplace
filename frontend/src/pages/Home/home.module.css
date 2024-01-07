@@ -1,0 +1,5 @@
+.home {
+  background-color: var(--dark-color-1);
+  height: auto;
+  min-height: 100vh;
+}

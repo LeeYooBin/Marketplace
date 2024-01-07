@@ -1,0 +1,18 @@
+.products {
+  padding: 12rem 2rem 5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+}
+
+@media screen and (min-width: 760px) {
+  .products {
+    padding: 12rem 7rem 5rem 7rem;
+  }
+}
+
+@media screen and (min-width: 1030px) {
+  .products {
+    padding: 12rem 10rem 5rem 10rem;
+  }
+}
