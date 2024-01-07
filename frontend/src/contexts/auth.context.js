@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     const user = localStorage.getItem("user");
 
     if (user) setIsLogged(true);
-      
+
     setLoading(false);
   }, []);
 
@@ -25,20 +26,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/user/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(credentials)
-      });
-      const data = await response.json();
+      const response = await axios.post("http://localhost:8080/user/signin", credentials);
+      const data = response.data;
       setUser(data);
       localStorage.setItem("user", JSON.stringify(data));
       setIsLogged(true);
       navigate("/home");
-    }
-    catch (e) {
+    } catch (e) {
       alert("Something went wrong.");
     }
   };
@@ -57,17 +51,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      await fetch("http://localhost:8080/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(credentials)
-      });
-      
+      await axios.post("http://localhost:8080/user/signup", credentials);
       login({ email: credentials.email, password: credentials.password });
-    }
-    catch (e) {
+    } catch (e) {
       alert("Something went wrong.");
     }
   };
@@ -77,25 +63,26 @@ export const AuthProvider = ({ children }) => {
       alert("Fill out the fields");
       return;
     }
-  
+
     try {
       const authToken = user.token;
       const id = user.user._id;
-  
-      const response = await fetch(`http://localhost:8080/user/update/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`
-        },
-        body: JSON.stringify(credentials)
-      });
-  
-      const data = await response.json();
+
+      const response = await axios.post(
+        `http://localhost:8080/user/update/${id}`,
+        credentials,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      const data = response.data;
       setUser(data);
       localStorage.setItem("user", JSON.stringify(data));
-    } 
-    catch (error) {
+    } catch (error) {
       alert("Something went wrong.");
     }
   };
@@ -104,21 +91,23 @@ export const AuthProvider = ({ children }) => {
     try {
       const authToken = user.token;
       const id = user.user._id;
-  
-      await fetch(`http://localhost:8080/user/delete/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`
+
+      await axios.post(
+        `http://localhost:8080/user/delete/${id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-      });
-    }
-    catch(e) {
+      );
+    } catch (e) {
       alert("Something went wrong.");
     }
-  }
+  };
 
-  if (loading) return <></>
+  if (loading) return <></>;
 
   return (
     <AuthContext.Provider value={{ isLogged, login, register, deleteUser, updateUser, logout }}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
+import axios from 'axios';
 
 export const ProductsContext = createContext();
 
@@ -17,9 +18,12 @@ const ProductsProvider = ({ children }) => {
   }, [products]);
 
   const searchProducts = async (product) => {
-    const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`);
-    const data = await response.json();
-    setProducts(data.results);
+    try {
+      const response = await axios.get(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`);
+      setProducts(response.data.results);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const isProductInCart = (productId) => {

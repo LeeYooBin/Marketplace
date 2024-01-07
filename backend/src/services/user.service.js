@@ -58,6 +58,10 @@ class UserService {
       throw new Error(error.message || "Error deleting user");
     }
   }
+
+  static generateToken = (userID, secret) => {
+    return jwt.sign({ userID }, secret, { expiresIn: 86400 });
+  };
 }
 
 module.exports = UserService;
